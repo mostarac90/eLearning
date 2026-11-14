@@ -8,13 +8,13 @@ export async function getAllCourses() {
 
 export async function createCourse(courseData: CreateCourseInput) { 
 
-    let courses = await courseRepository.getAllCourses();
+    let course = await courseRepository.createCourse(courseData);
 
-    if(!courses || courses.length === 0) {
-        throw new Error("No courses available");
+    if(!course) {
+        throw new Error("Failed to create course");
     }
-
-    return courses; 
+    
+    return course; 
 }   
 
 export async function getCourseById(courseId: string) {

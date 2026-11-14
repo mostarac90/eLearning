@@ -4,6 +4,7 @@ import cors from "cors";
 import { env } from "./config/env.js";
 import healthRoutes from "./routes/healthRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import courseRoutes from "./routes/courseRoutes.js";
 
 const app = express();
 
@@ -19,5 +20,7 @@ app.use("/api/health", healthRoutes);
 
 // Error handling (must be registered after routes)
 app.use(errorHandler);
+
+app.use("/api/courses", courseRoutes);
 
 export default app;

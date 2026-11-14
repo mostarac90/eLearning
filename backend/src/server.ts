@@ -1,18 +1,19 @@
-import express from "express";
+import app from "./app.js";
+import { env } from "./config/env.js";
+import { connectDatabase } from "./config/database.js";
 
-const app = express();
+const startServer = async () => {
+    try {
+        await connectDatabase();
 
-app.use(express.json());
+        app.listen(env.port, () => {
+            console.log(`EasyLearning API running on port ${env.port}`);
+        });
 
-app.get("/api/health", (req, res) => {
-    res.json({
-        status: "OK",
-        application: "StudyFlow API"
-    });
-});
+    } catch (error) {
+        console.error("Failed to start EasyLearning:", error);
+        process.exit(1);
+    }
+};
 
-const PORT = 3000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+startServer();

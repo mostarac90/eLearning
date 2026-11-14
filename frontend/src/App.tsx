@@ -4,7 +4,7 @@ function App() {
 
       <header className="bg-white shadow-sm px-8 py-5">
         <h1 className="text-2xl font-bold text-slate-800">
-          StudyFlow
+          EasyLearning
         </h1>
       </header>
 

@@ -1,6 +1,7 @@
 
 import * as courseRepository from "../repositories/courseRepository.js";
 import type { CreateCourseInput } from "../repositories/courseRepository.js";
+import { AppError } from "../utils/AppError.js";
 
 export async function getAllCourses() {
     return courseRepository.getAllCourses();
@@ -13,7 +14,7 @@ export async function createCourse(courseData: CreateCourseInput) {
     if(!course) {
         throw new Error("Failed to create course");
     }
-    
+
     return course; 
 }   
 
@@ -22,7 +23,7 @@ export async function getCourseById(courseId: string) {
     let course = await courseRepository.getCourseById(courseId);
 
     if(!course) {
-        throw new Error("Course not found");
+        throw new AppError("Course not found", 404);
     }
 
     return course;

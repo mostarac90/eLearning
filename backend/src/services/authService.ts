@@ -1,5 +1,5 @@
 import { hashPassword, comparePassword } from '../utils/passwordUtils.js';
-import { createUser, getUserByEmail } from '../repositories/userRepository.js';
+import { createUser, getUserByEmail, getPublicUserById } from '../repositories/userRepository.js';
 import { AppError, StatusCode } from '../utils/AppError.js';
 
 
@@ -50,4 +50,20 @@ export async function loginUser(email: string, password: string) {
    const { passwordHash: _, ...safeUser } = existingUser.toObject();
 
    return safeUser;
+}
+
+// The logged-in user's profile. 404 if the account was deleted
+// after the token was issued (the token itself is still valid).
+export async function getCurrentUser(userId: string) {
+    const user = await getPublicUserById(userId);
+
+    if (!user) {
+        throw new AppError('User not found', StatusCode.NOT_FOUND);
+    }
+
+    return {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+    };
 }

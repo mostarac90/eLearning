@@ -7,13 +7,15 @@ import { AppError, StatusCode } from "../src/utils/AppError.js";
 // imported, which is why the service is loaded with a dynamic import below.
 const getUserByEmail = jest.fn<(email: string) => Promise<FakeUserDoc | null>>();
 const createUser = jest.fn<(data: Record<string, unknown>) => Promise<FakeUserDoc>>();
+const getPublicUserById = jest.fn<(id: string) => Promise<Record<string, unknown> | null>>();
 
 jest.unstable_mockModule("../src/repositories/userRepository.js", () => ({
     getUserByEmail,
-    createUser
+    createUser,
+    getPublicUserById
 }));
 
-const { registerUser, loginUser } = await import("../src/services/authService.js");
+const { registerUser, loginUser, getCurrentUser } = await import("../src/services/authService.js");
 
 // Minimal stand-in for a Mongoose document: the service only calls toObject()
 type FakeUserDoc = Record<string, unknown> & { toObject: () => Record<string, unknown> };
@@ -31,6 +33,31 @@ async function expectAppError(promise: Promise<unknown>, message: string, status
 beforeEach(() => {
     getUserByEmail.mockReset();
     createUser.mockReset();
+    getPublicUserById.mockReset();
+});
+
+describe("getCurrentUser", () => {
+    it("returns only _id, name and email", async () => {
+        getPublicUserById.mockResolvedValue({
+            _id: "user-1",
+            name: "Jane Doe",
+            email: "jane@example.com",
+            // Should never be returned, even if the query accidentally included them
+            passwordHash: "hash",
+            googleId: "google-123"
+        });
+
+        const user = await getCurrentUser("user-1");
+
+        expect(getPublicUserById).toHaveBeenCalledWith("user-1");
+        expect(user).toEqual({ _id: "user-1", name: "Jane Doe", email: "jane@example.com" });
+    });
+
+    it("throws 404 when the user no longer exists", async () => {
+        getPublicUserById.mockResolvedValue(null);
+
+        await expectAppError(getCurrentUser("deleted-user"), "User not found", StatusCode.NOT_FOUND);
+    });
 });
 
 describe("registerUser", () => {

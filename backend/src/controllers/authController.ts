@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { loginUser, registerUser } from "../services/authService.js";
+import { getCurrentUser, loginUser, registerUser } from "../services/authService.js";
 import { generateToken } from "../utils/jwtUtils.js";
 import { AppError, StatusCode } from "../utils/AppError.js";
 import { env } from "../config/env.js";
@@ -38,6 +38,24 @@ export async function register(req: Request, res: Response, next: NextFunction) 
         const token = generateToken(user._id.toString());
 
         res.status(StatusCode.CREATED).json({ user, token });
+    } catch (err) {
+        next(err);
+    }
+}
+
+// 200 OK            - returns { user: { _id, name, email } }
+// 401 Unauthorized  - no valid token (handled by authMiddleware)
+// 404 Not Found     - the account no longer exists
+export async function me(req: Request, res: Response, next: NextFunction) {
+    try {
+        if (!req.user) {
+            // Only reachable if the route is registered without authMiddleware
+            throw new AppError("Authentication required", StatusCode.UNAUTHORIZED);
+        }
+
+        const user = await getCurrentUser(req.user.id);
+
+        res.status(StatusCode.OK).json({ user });
     } catch (err) {
         next(err);
     }

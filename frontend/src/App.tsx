@@ -1,3 +1,6 @@
+import CourseForm from "./components/CourseForm";
+import CourseList from "./components/CourseList";
+
 function App() {
   return (
     <div className="min-h-screen bg-slate-100">
@@ -36,6 +39,20 @@ function App() {
           </div>
 
         </div>
+
+         <h3 className="text-3xl font-bold text-slate-900 mb-2">
+             EasyLearning – Courses
+        </h3>
+
+            <section>
+                <h2>Create a course</h2>
+                <CourseForm />
+            </section>
+
+            <section>
+                <h2>Available courses</h2>
+                <CourseList />
+            </section>
 
       </main>
 

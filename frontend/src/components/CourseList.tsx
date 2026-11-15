@@ -3,6 +3,7 @@ import { useCourses } from "../hooks/useCourses";
 import CourseEditForm from "./CourseEditForm";
 import useDeleteCourse from "../hooks/useDeleteCourse";
 import type { Course } from "../api/courseApi";
+import { Link } from "react-router-dom";
 
 const statusStyles = {
     draft: "bg-amber-100 text-amber-800",
@@ -21,7 +22,6 @@ export default function CourseList() {
            deleteCourseMutation.mutate(course._id);
          }
         }; 
-
 
     if (isLoading) {
         return <p className="text-slate-500">Loading courses...</p>;
@@ -58,9 +58,9 @@ export default function CourseList() {
                     ) : (
                         <>
                             <div className="mb-3 flex items-start justify-between gap-3">
-                                <h3 className="text-lg font-semibold text-slate-900">
+                                <h3><Link to={`/courses/${course._id}`} className="text-lg font-semibold text-slate-900">
                                     {course.title}
-                                </h3>
+                                </Link></h3>
                                 <span
                                     className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${statusStyles[course.status]}`}
                                 >

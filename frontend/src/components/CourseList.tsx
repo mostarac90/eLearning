@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useCourses } from "../hooks/useCourses";
 import CourseEditForm from "./CourseEditForm";
 import useDeleteCourse from "../hooks/useDeleteCourse";
 import type { Course } from "../api/courseApi";
@@ -10,10 +9,13 @@ const statusStyles = {
     published: "bg-emerald-100 text-emerald-800"
 };
 
+interface CourseListProps {
+    courses: Course[];
+}
 
-export default function CourseList({ courses: allCourses }: { courses: ReturnType<typeof useCourses> }) {
+export default function CourseList({ courses }: CourseListProps) {
     const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
-    const { data, isLoading, isError, error } = allCourses;
+   
     
        const deleteCourseMutation = useDeleteCourse();
     
@@ -22,28 +24,6 @@ export default function CourseList({ courses: allCourses }: { courses: ReturnTyp
            deleteCourseMutation.mutate(course._id);
          }
         }; 
-
-    if (isLoading) {
-        return <p className="text-slate-500">Loading courses...</p>;
-    }
-
-    if (isError) {
-        return (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-                Error: {error?.message}
-            </p>
-        );
-    }
-
-    const courses = data?.courses ?? [];
-
-    if (courses.length === 0) {
-        return (
-            <p className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
-                No courses found. Create your first course above.
-            </p>
-        );
-    }
 
     return (
         <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

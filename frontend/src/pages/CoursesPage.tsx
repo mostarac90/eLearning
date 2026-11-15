@@ -8,12 +8,24 @@ export default function CoursesPage() {
     const [page, setPage] = useState(1);
     const limit = 10;
 
-    const allCourses = useCourses(page, limit);
+    const { data, isLoading, isError, error } = useCourses(page, limit);
 
-    const totalPages = allCourses.data?.totalPages ?? 1;
+    const courses = data?.courses ?? [];
+    const totalPages = data?.totalPages ?? 1;
+
 
     return (
         <>
+
+            {isLoading && (
+                <p className="text-slate-500">Loading courses...</p>
+            )}
+            {isError && (
+                <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                    Error: {error?.message}
+                </p>
+            )}
+
             <h2 className="text-3xl font-bold text-slate-900 mb-2">
                 Courses
             </h2>
@@ -33,7 +45,7 @@ export default function CoursesPage() {
                 <h3 className="text-xl font-semibold text-slate-800 mb-4">
                     Available courses
                 </h3>
-                <CourseList courses={allCourses} />
+                <CourseList courses={courses} />
             </section>
 
         <div className="flex items-center justify-between mt-4">

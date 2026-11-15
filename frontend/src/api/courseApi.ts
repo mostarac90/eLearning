@@ -21,8 +21,17 @@ export interface UpdateCourseInput {
     status?: "draft" | "published";
 }
 
-export const getCourses = async () => {
-    const response = await axiosInstance.get<Course[]>("/courses");
+export interface PaginatedCourses {
+    courses: Course[];
+    currentPage: number;
+    totalPages: number;
+    totalCourses: number;
+}
+
+export const getCourses = async (page = 1, limit = 10) => {
+    const response = await axiosInstance.get<PaginatedCourses>("/courses", {
+        params: { page, limit }
+    });
     return response.data;
 };
 

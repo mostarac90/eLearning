@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import CoursesPage from "./pages/CoursesPage";
-import CourseDetailsPage from "./components/CourseDetailsPage";
+import CourseDetailsPage from "./pages/CourseDetailsPage";
 import MainLayout from "./layouts/MainLayout";
 
 function App() {

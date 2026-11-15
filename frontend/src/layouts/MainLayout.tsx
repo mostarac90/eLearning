@@ -1,5 +1,6 @@
 import { NavLink,Outlet } from "react-router-dom";
 import type { NavLinkRenderProps } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const navLinks = [
   { to: "/", label: "Dashboard" },
@@ -11,8 +12,9 @@ export default function MainLayout() {
      <div className="min-h-screen bg-slate-100">
     <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 px-8 py-5">
-          <NavLink to="/" className="text-2xl font-bold text-slate-800">
+          <NavLink to="/" className="flex items-center gap-3 text-2xl font-bold text-slate-800">
             EasyLearning
+            <img src={logo} alt="" className="h-10 w-auto" />
           </NavLink>
 
           <nav>

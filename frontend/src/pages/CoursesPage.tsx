@@ -1,7 +1,17 @@
 import CourseForm from "../components/CourseForm";
 import CourseList from "../components/CourseList";
+import { useState } from "react";
+import { useCourses } from "../hooks/useCourses";
 
 export default function CoursesPage() {
+
+    const [page, setPage] = useState(1);
+    const limit = 10;
+
+    const allCourses = useCourses(page, limit);
+
+    const totalPages = allCourses.data?.totalPages ?? 1;
+
     return (
         <>
             <h2 className="text-3xl font-bold text-slate-900 mb-2">
@@ -23,8 +33,34 @@ export default function CoursesPage() {
                 <h3 className="text-xl font-semibold text-slate-800 mb-4">
                     Available courses
                 </h3>
-                <CourseList />
+                <CourseList courses={allCourses} />
             </section>
+
+        <div className="flex items-center justify-between mt-4">
+            <button
+                disabled={page === 1}
+                onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+                Previous
+            </button>
+
+            <span className="text-sm text-slate-600">
+                Page <span className="font-semibold text-slate-900">{page}</span> of{" "}
+                <span className="font-semibold text-slate-900">{Math.max(totalPages, 1)}</span>
+            </span>
+
+            <button
+                disabled={page >= totalPages}
+                onClick={() => setPage(prev => prev + 1)}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+                Next
+            </button>
+
+           
+        </div>
+
         </>
     );
 }

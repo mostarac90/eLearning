@@ -9,6 +9,18 @@ export type CreateCourseInput = {
 };
 
 
+export async function getPaginatedCourses(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    
+    const [total, courses] = await Promise.all([
+        Course.countDocuments(),
+        Course.find().skip(skip).limit(limit)
+    ]);
+
+    return { total, courses };
+
+}
+
 export async function getAllCourses() {
     return Course.find();
 }       

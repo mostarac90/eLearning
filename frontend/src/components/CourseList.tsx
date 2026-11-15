@@ -11,9 +11,9 @@ const statusStyles = {
 };
 
 
-export default function CourseList() {
+export default function CourseList({ courses: allCourses }: { courses: ReturnType<typeof useCourses> }) {
     const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
-    const { data, isLoading, isError, error } = useCourses();
+    const { data, isLoading, isError, error } = allCourses;
     
        const deleteCourseMutation = useDeleteCourse();
     
@@ -35,7 +35,9 @@ export default function CourseList() {
         );
     }
 
-    if (data?.length === 0) {
+    const courses = data?.courses ?? [];
+
+    if (courses.length === 0) {
         return (
             <p className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
                 No courses found. Create your first course above.
@@ -45,7 +47,7 @@ export default function CourseList() {
 
     return (
         <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {data?.map(course => (
+            {courses.map(course => (
                 <li
                     key={course._id}
                     className="flex flex-col rounded-xl bg-white p-6 shadow-sm transition hover:shadow-md"

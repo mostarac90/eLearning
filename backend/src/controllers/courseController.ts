@@ -2,6 +2,18 @@ import * as courseService from "../services/courseService.js";
 import type { CreateCourseInput } from "../repositories/courseRepository.js";
 import type { Request, Response, NextFunction } from "express";
 
+
+export async function getPaginatedCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const paginatedCourses = await courseService.getPaginatedCourses(page, limit);
+        res.json(paginatedCourses);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function getAllCourses(req: Request, res: Response, next: NextFunction) {
     try {
         const courses = await courseService.getAllCourses();

@@ -1,4 +1,5 @@
 
+
 name: CI
 
 on:
@@ -8,44 +9,51 @@ on:
     branches: [main]
 
 jobs:
-  frontend-build:
-    name: Frontend Build
+  frontend:
+    name: Frontend CI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Build frontend
+      - name: ESLint
+        run: npm run lint --workspace=frontend
+
+      - name: Prettier
+        run: npm run format:check --workspace=frontend
+
+      - name: Build
         run: npm run build --workspace=frontend
 
-  backend-build:
-    name: Backend Build
+  backend:
+    name: Backend CI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
+
+      - name: ESLint
+        run: npm run lint --workspace=backend
+
+      - name: Prettier
+        run: npm run format:check --workspace=backend
+
+      - name: Build
+        run: npm run build --workspace=backend
 
       - name: Build backend
         run: npm run build --workspace=backend

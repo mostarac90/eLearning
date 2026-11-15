@@ -1,6 +1,9 @@
-import { NavLink,Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import type { NavLinkRenderProps } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import logo from "../assets/logo.png";
+import { logout } from "../api/authApi";
+import { clearToken } from "../auth/tokenStorage";
 
 const navLinks = [
   { to: "/", label: "Dashboard" },
@@ -8,6 +11,21 @@ const navLinks = [
 ];
 
 export default function MainLayout() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const handleLogout = async () => {
+    try {
+      // Clears the Google sign-in cookie, which JavaScript can't remove itself
+      await logout();
+    } catch {
+      // Log out locally even if the server can't be reached
+    }
+    clearToken();
+    queryClient.clear();
+    navigate("/login", { replace: true });
+  };
+
   return (
      <div className="min-h-screen bg-slate-100">
     <header className="bg-white shadow-sm">
@@ -17,7 +35,7 @@ export default function MainLayout() {
             <img src={logo} alt="" className="h-10 w-auto" />
           </NavLink>
 
-          <nav>
+          <nav className="flex items-center gap-4">
             <ul className="flex gap-2">
               {navLinks.map(link => (
                 <li key={link.to}>
@@ -37,6 +55,14 @@ export default function MainLayout() {
                 </li>
               ))}
             </ul>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              Log out
+            </button>
           </nav>
         </div>
       </header>

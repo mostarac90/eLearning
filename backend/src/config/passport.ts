@@ -29,10 +29,7 @@ if (googleClientId && googleClientSecret) {
                     const existingGoogleUser = await getUserByGoogleId(profile.id);
 
                     if (existingGoogleUser) {
-                        const { passwordHash: _, ...safeUser } =
-                            existingGoogleUser.toObject();
-
-                        return done(null, safeUser);
+                        return done(null, { id: existingGoogleUser._id.toString() });
                     }
 
                     // 2. Only accept verified Google email addresses
@@ -64,10 +61,7 @@ if (googleClientId && googleClientSecret) {
                         googleId: profile.id
                     });
 
-                    const { passwordHash: _, ...safeUser } =
-                        newUser.toObject();
-
-                    return done(null, safeUser);
+                    return done(null, { id: newUser._id.toString() });
 
                 } catch (error) {
                     return done(error as Error);

@@ -5,4 +5,5 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-family: Arial, sans-serif;
+  background-color: var(--color-slate-100);
 }

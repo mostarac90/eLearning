@@ -1,6 +1,6 @@
 import axiosInstance from "./axios";
 
-interface Course {
+export interface Course {
     _id: string;
     title: string;
     description: string;

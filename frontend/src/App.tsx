@@ -40,19 +40,23 @@ function App() {
 
         </div>
 
-         <h3 className="text-3xl font-bold text-slate-900 mb-2">
-             EasyLearning – Courses
+        <h3 className="text-3xl font-bold text-slate-900 mt-12 mb-6">
+          EasyLearning – Courses
         </h3>
 
-            <section>
-                <h2>Create a course</h2>
-                <CourseForm />
-            </section>
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold text-slate-800 mb-4">
+            Create a course
+          </h2>
+          <CourseForm />
+        </section>
 
-            <section>
-                <h2>Available courses</h2>
-                <CourseList />
-            </section>
+        <section>
+          <h2 className="text-xl font-semibold text-slate-800 mb-4">
+            Available courses
+          </h2>
+          <CourseList />
+        </section>
 
       </main>
 

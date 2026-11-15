@@ -34,4 +34,14 @@ const userSchema = new Schema(
     }
 );
 
+userSchema.index(
+    { googleId: 1 },
+    {
+        unique: true,
+        partialFilterExpression: {
+            googleId: { $type: "string" }
+        }
+    }
+);
+
 export const User = mongoose.model("User", userSchema);
